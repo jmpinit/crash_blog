@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<launch>
+  <!-- Setup CollisionIK -->
+  <node pkg="relaxed_ik_ros1" type="relaxed_ik_rust.py" name="relaxed_ik" output="screen"/>
+  <rosparam param="simulation_time">go</rosparam>
+
+  <!-- Setup the canvas -->
+  <!-- x y z qx qy qz qw frame_id child_frame_id period_in_ms -->
+  <node pkg="tf" type="static_transform_publisher" name="canvas"
+      args="1.0 0.0 1.0 0 0 0 1 base_link canvas 30" />
+
+  <!-- Show the scene in RViz -->
+  <arg name="show_obstacles" default="true"/>
+  <node pkg="relaxed_ik_ros1" type="rviz_viewer.py" name="rviz_viewer" output="screen" args="$(arg show_obstacles)"/>
+
+  <arg name="node_start_delay" default="10.0" />
+  <node pkg="crash_blog" name="paint_square" type="paint_square.py" respawn="false" output="screen" launch-prefix="bash -c 'sleep $(arg node_start_delay); $0 $@' " />
+</launch>
